@@ -75,4 +75,95 @@
 (= #{3} (set '(3)))
 (= 3 (count #{1 2 3}))
 (= #{1 2 3 4 5} (set '(1 1 2 2 3 3 4 4 5 5)))
-(= #{1 2 3 4 5} (set/union #{1 2 3 4} #{2 3 5}))
+(= #{1 2 3 4 5} (clojure.set/union #{1 2 3 4} #{2 3 5}))
+(= #{2 3} (clojure.set/intersection #{1 2 3 4} #{2 3 5}))
+(= #{1 4} (clojure.set/difference #{1 2 3 4 5} #{2 3 5}))
+
+6
+
+(= {:a 1 :b 2} (hash-map :a 1 :b 2))
+(= {:a 1} (hash-map :a 1))
+(= 2 (count {:a 1 :b 2}))
+(= 2 (get {:a 1 :b 2} :b))
+(= 1 ({:a 1 :b 2} :a))
+(= 1 (:a {:a 1 :b 2}))
+(= "Sochi" ({2010 "Vancouver" 2014 "Sochi" 2018 "PyeongChang"} 2014))
+(= nil (get {:a 1 :b 2} :c))
+(= :key-not-found (get {:a 1 :b 2} :c :key-not-found))
+(= true (contains? {:a nil :b nil} :b))
+(= false (contains? {:a nil :b nil} :c))
+(= {1 "January" 2 "February"} (assoc {1 "January"} 2 "February"))
+(= {1 "January"} (dissoc {1 "January" 2 "February"} 2))
+(= {:a 1 :b 2 :c 3} (merge {:a 1 :b 2} {:c 3}))
+(= {:a 1 :b 2 :c 3} (merge-with + {:a 1 :b 1} {:b 1 :c 3}))
+(= (list 2010 2014 2018)
+     (sort (keys { 2014 "Sochi" 2018 "PyeongChang" 2010 "Vancouver"})))
+(= (list "PyeongChang" "Sochi" "Vancouver")
+     (sort (vals {2010 "Vancouver" 2014 "Sochi" 2018 "PyeongChang"})))
+(= {:a 2 :b 3}
+     (into {}
+           (map
+            (fn [[k v]] [k (inc v)])
+            {:a 1 :b 2}))))
+
+7
+
+(defn multiply-by-ten [n]
+  (* 10 n))
+
+(defn square [n] (* n n))
+
+(= 81 (square 9))
+(= 20 (multiply-by-ten 2))
+(= 10 ((fn [n] (* 5 n)) 2))
+(= 60 (#(* 15 %) 4))
+(= 15 (#(+ %1 %2 %3) 4 5 6))
+(= "AACC" (#(str "AA" %2) "bb" "CC"))
+(= 9 (((fn [] +)) 4 5))
+(= 20 ((fn [f] (f 4 5))
+           *))
+(= 25 (#(% 5)
+          (fn [n] (* n n))))
+(= 25 (#(% 5) square))
+
+8
+
+(= :a (if (false? (= 4 5))
+          :a
+          :b))
+(= [](if (> 4 3)
+          []))
+(= nil (if (nil? 0)
+          [:a :b :c]))
+(= :glory (if (not (empty? ()))
+              :doom
+              __))
+(= :glory (if (not (empty? ()))
+              :doom
+              :glory))
+(let [x 5]
+    (= :your-road (cond (= x 10) :road-not-taken
+                        (= x 20) :another-road-not-taken
+                        :else :your-road)))
+(= 'doom (if-not (zero? 213)
+          'doom
+          'more-doom))
+(= "pretty fast"
+     (explain-exercise-velocity :bicycling))
+(= "is that even exercise?"
+     (explain-exercise-velocity :watching-tv))
+
+9
+
+(= [4 8 12] (map (fn [x] (* 4 x)) [1 2 3]))
+(= [1 4 9 16 25] (map (fn [x] (* x x)) [1 2 3 4 5]))
+(= '(false false true false false) (map nil? [:a :b nil :c :d]))
+(= '() (filter (fn [x] false) '(:anything :goes :here)))
+(= '(:anything :goes :here) (filter (fn [x] true) '(:anything :goes :here)))
+(= [10 20 30] (filter (fn [x] (<= x 30)) [10 20 30 40 50 60 70 80]))
+(= [10 20 30] (map (fn [x] (* x 10)) (filter (fn [x] (<= x 3)) [1 2 3 4 5 6 7 8])))
+(= 24 (reduce (fn [a b] (* a b)) [1 2 3 4]))
+(= 2400 (reduce (fn [a b] (* a b)) (* 100) [1 2 3 4]))
+(= "longest" (reduce (fn [a b]
+                         (if (< (count a) (count b)) b a))
+                       ["which" "word" "is" "longest"]))
